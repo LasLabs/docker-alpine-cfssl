@@ -9,6 +9,6 @@ install:
   - docker build -t $TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_DIR/
 
 script:
-  - docker run -d -p 8069:8069 --name $TRAVIS_BUILD_NUMBER -t $TRAVIS_BUILD_NUMBER
-  - sleep 10
+  - docker run -d -p 8080:8080 --name cfssl-exec-$TRAVIS_BUILD_NUMBER -t $TRAVIS_BUILD_NUMBER
+  - sleep 5
   - curl --fail http://localhost:8080/
