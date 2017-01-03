@@ -39,7 +39,7 @@ pleasure:
 Known Issues / Roadmap
 ======================
 
-* 
+* Lack of HTTPS for API - https://github.com/cloudflare/cfssl/wiki/Add-HTTPS-endpoints-to-CFSSL
 
 Bug Tracker
 ===========
