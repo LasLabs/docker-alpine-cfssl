@@ -1,0 +1,14 @@
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+install:
+  - docker build -t $TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_DIR/
+
+script:
+  - docker run -d -p 8069:8069 --name $TRAVIS_BUILD_NUMBER -t $TRAVIS_BUILD_NUMBER
+  - sleep 10
+  - curl --fail http://localhost:8080/
