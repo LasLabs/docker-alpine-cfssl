@@ -5,10 +5,23 @@ language: python
 services:
   - docker
 
+env:
+  global:
+    - PORTS="8080:8080"
+    - DAEMONIZE="1"
+
+  matrix:
+    - TESTS="1"
+    - LINT_CHECK="1" LINT_IGNORE="SC2086,DL3000"
+    - HUB="1"
+
 install:
-  - docker build -t $TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_DIR/
+  - git clone --depth=1 https://github.com/LasLabs/docker-quality-tools.git ${HOME}/docker-quality-tools
+  - export PATH=${HOME}/docker-quality-tools/travis:${PATH}
+  - travis_install_all
 
 script:
-  - docker run -d -p 8080:8080 --name cfssl-exec-$TRAVIS_BUILD_NUMBER -t $TRAVIS_BUILD_NUMBER
-  - sleep 5
-  - curl --fail http://localhost:8080/
+  - travis_run_all
+
+after_success:
+  - travis_after_success_all
