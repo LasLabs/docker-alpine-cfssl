@@ -1,0 +1,4 @@
+{
+  "driver": "sqlite3",
+  "data_source": "/etc/cfssl/certstore_production.db"
+}

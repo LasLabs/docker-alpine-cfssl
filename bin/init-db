@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+# Copyright 2017 LasLabs Inc.
+# License Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.html).
+
+import json
+import subprocess
+import os
+
+CERTDB_PATH = '/opt/certdb/'
+DRIVER_TO_GOOSE = {
+    'sqlite3': '/opt/certdb/sqlite/',
+    'postgres': '/opt/certdb/pg/',
+    'mysql': '/opt/certdb/mysql/',
+}
+
+
+def get_config():
+    """ Return the database config object. """
+    config = os.path.join(
+        '/etc/cfssl',
+        os.environ.get('DB_CONFIG'),
+    )
+    with open(config, 'r') as fh:
+        return json.load(fh)
+
+def initialize_db(destroy=None):
+    """ Initialize the database. """
+    if destroy is None:
+        destroy = os.environ.get('DB_DESTROY') == "1"
+    config = get_config()
+    migration = DRIVER_TO_GOOSE[config['driver']]
+    base_cmd = [
+        'goose',
+        '-env', os.environ.get('DB_ENVIRONMENT'),
+        '-path', migration,
+    ]
+    if destroy:
+        subprocess.check_output(base_cmd + ['down'])
+    subprocess.check_output(base_cmd + ['up'])
+
+
+if __name__ == '__main__':
+    initialize_db()

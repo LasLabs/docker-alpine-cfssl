@@ -1,0 +1,21 @@
+#!/bin/ash
+# Copyright 2017 LasLabs Inc.
+# License Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.html).
+
+set -e
+
+cfssl gencert -initca "/etc/cfssl/${CFSSL_CSR}" | cfssljson -bare ca
+
+until curl -d '{"label": "primary"}' "${CA_ROOT_URI}/api/v1/cfssl/info"; do
+    >&2 echo "Root CA is unavailable - sleeping."
+    sleep 1
+done
+>&2 echo "Root CA is ready - resuming."
+
+CSR=$(awk '{printf "%s\\n", $0}' ca.csr)
+DATA='{"certificate_request": "'$CSR'"}'
+
+export RESPONSE=$(echo $DATA | curl -d @- "${CA_ROOT_URI}/api/v1/cfssl/sign")
+CERT=$(python -c "import json, os; print json.loads(os.environ.get('RESPONSE'))['result']['certificate']")
+echo "${CERT}" > ca.pem
+export RESPONSE=""

@@ -1,0 +1,19 @@
+{
+  "CN": "My Intermediate CA",
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  },
+    "names": [
+       {
+         "C": "US",
+         "L": "Las Vegas",
+         "O": "Example Company",
+         "OU": "CA Services",
+         "ST": "Nevada"
+       }
+    ],
+  "ca": {
+    "expiry": "42720h"
+  }
+}

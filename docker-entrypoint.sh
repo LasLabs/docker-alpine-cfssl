@@ -1,22 +1,29 @@
 #!/bin/ash
-# Copyright 2016 LasLabs Inc.
-# # License MIT (https://opensource.org/licenses/MIT).
+# Copyright 2016-2017 LasLabs Inc.
+# License Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.html).
 
 set -e
 
-if [ ! -f $CFSSL_DATA/csr_ca.json ];
-then
+# Generate keys if necessary
+if [ ! -f /var/pki/ca.pem ] || [ ! -f /var/pki/ca-key.pem ] ; then
 
-    cfssl gencert -initca $CFSSL_DATA/csr_ca.json | cfssljson -bare ca
+    # Create root if no API URI
+    if [ ! "${CA_ROOT_URI}" ] ; then
+        init-ca-root
+    # Otherwise create a CSR, then have the Root CA sign
+    else
+        init-ca-intermediate
+    fi
 
 fi
 
-# Add cfssl as command if needed
-if [ "${1:0:1}" = '-' ]; then
-	set -- cfssl "$@"
+if [ "${DB_INIT}" -eq "1" ] || [ "${DB_DESTROY}" -eq "1" ] ; then
+    init-db
 fi
 
-# As argument is not related to cfssl,
-# then assume that user wants to run their own process,
-# for example a `bash` shell to explore this image
+# Add config flags if cfssl
+if [ "${1}" = 'cfssl' ]; then
+	set -- "$@" -config="/etc/cfssl/${CFSSL_CONFIG}" -db-config="/etc/cfssl/${DB_CONFIG}"
+fi
+
 exec "$@"

@@ -1,9 +1,11 @@
 #!/usr/bin/env sh
-# Copyright 2016 LasLabs Inc.
-# License MIT.0 or later (https://opensource.org/licenses/MIT).
+# Copyright 2016-2017 LasLabs Inc.
+# License Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.html).
 
 set -e
 
-curl --fail http://localhost:8080/
+sleep 5
+
+curl --fail -d '{"label": "primary"}' http://localhost:8080/api/v1/cfssl/info
 
 echo "Curl passed on $DOCKER_CONTAINER_ID"
