@@ -1,16 +1,19 @@
 {
-  "CN": "My Awesome CA",
+  "CN": "My Root CA",
   "key": {
-    "algo": "rsa",
-    "size": 4096
+    "algo": "ecdsa",
+    "size": 256
   },
     "names": [
        {
          "C": "US",
          "L": "Las Vegas",
-         "O": "LasLabs Inc.",
+         "O": "Example Company",
          "OU": "CA Services",
          "ST": "Nevada"
        }
-    ]
+    ],
+  "ca": {
+    "expiry": "262800h"
+  }
 }

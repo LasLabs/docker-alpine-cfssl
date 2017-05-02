@@ -1,0 +1,24 @@
+---
+
+version: "2"
+
+services:
+
+  root:
+    build: .
+    environment:
+      - CFSSL_CSR=csr_root_ca.json
+      - CFSSL_CONFIG=ca_root_config.json
+      - DB_CONFIG=db_config.json
+
+  intermediate:
+    build: .
+    depends_on:
+      - root
+    ports:
+      - "8080:8080"
+    environment:
+      - CFSSL_CSR=csr_intermediate_ca.json
+      - CFSSL_CONFIG=ca_intermediate_config.json
+      - CA_ROOT_URI=http://root:8080
+      - DB_CONFIG=db_config.json

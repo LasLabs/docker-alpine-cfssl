@@ -12,8 +12,7 @@ env:
 
   matrix:
     - TESTS="1"
-    - LINT_CHECK="1" LINT_IGNORE="SC2086,DL3000"
-    - HUB="1"
+    - LINT_CHECK="1"
 
 install:
   - git clone --depth=1 https://github.com/LasLabs/docker-quality-tools.git ${HOME}/docker-quality-tools
