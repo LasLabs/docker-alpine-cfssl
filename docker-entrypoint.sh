@@ -5,7 +5,7 @@
 set -e
 
 # Generate keys if necessary
-if [ ! -f /var/pki/ca.pem ] || [ ! -f /var/pki/ca-key.pem ] ; then
+if [ ! -f /etc/cfssl/ca.pem ] || [ ! -f /etc/cfssl/ca-key.pem ] ; then
 
     # Create root if no API URI
     if [ ! "${CA_ROOT_URI}" ] ; then
